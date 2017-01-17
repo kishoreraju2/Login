@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.FileNotFoundException;
@@ -16,6 +17,7 @@ import java.io.InputStream;
 
 
 public class UserAreaActivity extends AppCompatActivity {
+
 
 
     @Override
@@ -28,16 +30,31 @@ public class UserAreaActivity extends AppCompatActivity {
         final TextView welcomeMessage = (TextView) findViewById(R.id.textView);
 
 
+        boolean yes = MainActivity.isLoggedFacebook();
+        if(yes == false) {
+            Intent intent = getIntent();
+            String name = intent.getStringExtra("name");
+            String username = intent.getStringExtra("username");
+            int age = intent.getIntExtra("age", -1);
 
-        Intent intent = getIntent();
-        String name = intent.getStringExtra("name");
-        String username = intent.getStringExtra("username");
-        int age = intent.getIntExtra("age",-1);
+            String message = name + " Welcome to the user area";
+            welcomeMessage.setText(message);
+            etUserName.setText(username);
+            etAge.setText(age + "");
+        }
+        else{
 
-        String message = name + " Welcome to the user area";
-        welcomeMessage.setText(message);
-        etUserName.setText(username);
-        etAge.setText(age+"");
+            Bundle inBundle = getIntent().getExtras();
+            String name = inBundle.get("name").toString();
+            String surname = inBundle.get("surname").toString();
+            String imageUrl = inBundle.get("imageUrl").toString();
+
+            new DownloadImage((ImageView)findViewById(R.id.profileImage)).execute(imageUrl);
+            String message = name + " Welcome to the user area";
+            welcomeMessage.setText(message);
+            etUserName.setText(name+" "+surname);
+
+        }
 
 
 
